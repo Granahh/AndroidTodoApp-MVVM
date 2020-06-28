@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SimpleTodoApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="item_menu_all_tasks_completed">Todas las tareas Completadas</string>
+    <string name="item_menu_delete_all_data">Borrar Todos los Datos</string>
+    <string name="done">Ok</string>
+    <string name="title_dialog">Introduzca una tarea</string>
+    <string name="input_task_title">Nombre de la tarea</string>
+    <string name="tv_null_tasks">No hay ninguna tarea ¡Añade una!</string>
+</resources>
