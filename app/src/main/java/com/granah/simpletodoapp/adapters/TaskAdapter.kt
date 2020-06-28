@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.granah.simpletodoapp.databinding.ListItemTaskBinding
 import com.granah.simpletodoapp.models.Task
 import java.text.DateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class TaskAdapter(private val clickListener: TaskListener, private val onDeleteListener:TaskOnDelete) : ListAdapter<Task, TaskAdapter.ViewHolder>(TaskDiffCallback()) {
 
