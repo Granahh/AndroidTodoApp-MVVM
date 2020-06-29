@@ -9,7 +9,7 @@ import com.granah.simpletodoapp.databinding.ListItemTaskBinding
 import com.granah.simpletodoapp.models.Task
 import java.text.DateFormat
 
-class TaskAdapter(private val clickListener: TaskListener, private val onDeleteListener:TaskOnDelete) : ListAdapter<Task, TaskAdapter.ViewHolder>(TaskDiffCallback()) {
+class TaskAdapter(private val onDeleteListener:TaskAdapterSwipeListener, private val clickListener: TaskAdapterListeners) : ListAdapter<Task, TaskAdapter.ViewHolder>(TaskDiffCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,19 +21,17 @@ class TaskAdapter(private val clickListener: TaskListener, private val onDeleteL
         holder.bind(item,clickListener)
     }
 
-    fun onDelete(position: Int) = onDeleteListener.onDelete(position)
+    fun onDelete(position: Int) = onDeleteListener.onSwipeDelete(position)
 
     class ViewHolder private constructor(private val binding: ListItemTaskBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(item:Task,clickListener: TaskListener){
+        fun bind(item:Task,clickListener: TaskAdapterListeners){
 
             binding.task = item
             binding.clicklistener = clickListener
             binding.position = this
             binding.dateTime = DateFormat.getInstance().format(item.createdAt).toString()
 
-
-
-           binding.checkbox.isChecked = item.isDone
+            binding.checkbox.isChecked = item.isDone
         }
 
         companion object{
@@ -59,11 +57,12 @@ class TaskDiffCallback : DiffUtil.ItemCallback<Task>(){
 }
 
 
-class TaskListener(val clickListener: (taskId:Long,position: Int) -> Unit){
-    fun onClick(task:Task,position: TaskAdapter.ViewHolder) = clickListener(task.taskId,position.adapterPosition)
+interface TaskAdapterListeners{
+    fun onClickCheckBox(task: Task, position: Int)
+
 }
 
-class TaskOnDelete(val onDeleteListener: (position:Int) -> Unit){
-    fun onDelete(position: Int) = onDeleteListener(position)
+interface TaskAdapterSwipeListener{
+    fun onSwipeDelete(position: Int)
 }
 

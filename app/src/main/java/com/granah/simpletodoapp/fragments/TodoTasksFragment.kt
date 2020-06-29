@@ -13,19 +13,18 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.granah.simpletodoapp.databinding.FragmentTodoTasksBinding;
 import com.granah.simpletodoapp.R
+import com.granah.simpletodoapp.adapters.*
 import com.granah.simpletodoapp.utils.SwipeToDelete
-import com.granah.simpletodoapp.adapters.TaskAdapter
-import com.granah.simpletodoapp.adapters.TaskListener
-import com.granah.simpletodoapp.adapters.TaskOnDelete
 import com.granah.simpletodoapp.database.TaskDatabase
+import com.granah.simpletodoapp.models.Task
 import com.granah.simpletodoapp.viewmodels.TodoTaskViewModel
 import com.granah.simpletodoapp.viewmodels.TodoTasksViewModelFactory
 
 
 
-class TodoTasksFragment : Fragment() {
+class TodoTasksFragment : Fragment(),TaskAdapterListeners,TaskAdapterSwipeListener {
 
-    lateinit var  viewModel:TodoTaskViewModel
+    private lateinit var  viewModel:TodoTaskViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +45,7 @@ class TodoTasksFragment : Fragment() {
         /*
               Set up viewmodel and adapters
         */
-        val adapter = TaskAdapter(taskListener(), taskListenerDelete())
+        val adapter = TaskAdapter(this,this)
 
         binding.todoTaskViewModel = viewModel
         binding.recyclerView.adapter = adapter
@@ -88,14 +87,6 @@ class TodoTasksFragment : Fragment() {
     }
 
 
-    private fun taskListener():TaskListener{
-        return TaskListener{ id: Long, pos: Int -> viewModel.onCompleted(id,pos)}
-    }
-
-    private fun taskListenerDelete():TaskOnDelete{
-        return TaskOnDelete{ viewModel.onDelete(it)}
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu,menu)
@@ -112,6 +103,14 @@ class TodoTasksFragment : Fragment() {
         return NavigationUI.onNavDestinationSelected(item,requireView().findNavController())
                 ||super.onOptionsItemSelected(item)
 
+    }
+
+    override fun onClickCheckBox(task: Task, position: Int) {
+        viewModel.onCompleted(task.taskId,position)
+    }
+
+    override fun onSwipeDelete(position: Int) {
+        viewModel.onDelete(position)
     }
 
 

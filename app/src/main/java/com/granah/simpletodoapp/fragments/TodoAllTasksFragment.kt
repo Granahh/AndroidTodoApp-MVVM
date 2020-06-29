@@ -10,18 +10,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.granah.simpletodoapp.R
+import com.granah.simpletodoapp.adapters.*
 import com.granah.simpletodoapp.utils.SwipeToDelete
-import com.granah.simpletodoapp.adapters.TaskAdapter
-import com.granah.simpletodoapp.adapters.TaskListener
-import com.granah.simpletodoapp.adapters.TaskOnDelete
 import com.granah.simpletodoapp.database.TaskDatabase
 import com.granah.simpletodoapp.databinding.FragmentTodoAllTasksBinding
+import com.granah.simpletodoapp.models.Task
 import com.granah.simpletodoapp.viewmodels.TodoTaskAllViewModel
 import com.granah.simpletodoapp.viewmodels.TodoTaskAllViewModelFactory
 
 
-class TodoAllTasksFragment : Fragment() {
-
+class TodoAllTasksFragment : Fragment(), TaskAdapterListeners,TaskAdapterSwipeListener {
+    private lateinit var viewModel:TodoTaskAllViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,14 +33,10 @@ class TodoAllTasksFragment : Fragment() {
        */
         val dataSource = TaskDatabase.getInstance(requireNotNull(this.activity).application).taskDatabaseDao
         val viewModelFactory = TodoTaskAllViewModelFactory(dataSource,requireNotNull(this.activity).application)
-        val viewModel = ViewModelProvider(this,viewModelFactory).get(TodoTaskAllViewModel::class.java)
 
-        val adapter = TaskAdapter(TaskListener{ l: Long, i: Int ->
-           viewModel.onUnChecked(l,i)
+         viewModel = ViewModelProvider(this,viewModelFactory).get(TodoTaskAllViewModel::class.java)
 
-        }, TaskOnDelete {
-            viewModel.onDelete(it)
-        })
+        val adapter = TaskAdapter(this,this)
 
         binding.todoTaskAllViewModel = viewModel
         binding.recyclerView.adapter = adapter
@@ -55,8 +50,6 @@ class TodoAllTasksFragment : Fragment() {
         )
 
         itemTouchDelete.attachToRecyclerView(binding.recyclerView)
-
-
 
         /*
            Observers
@@ -76,15 +69,16 @@ class TodoAllTasksFragment : Fragment() {
 
         })
 
-
-
-
-
-
         return binding.root
     }
 
+    override fun onClickCheckBox(task: Task, position: Int) {
+        viewModel.onUnChecked(task.taskId,position)
+    }
 
+    override fun onSwipeDelete(position: Int) {
+        viewModel.onDelete(position)
+    }
 
 
 }

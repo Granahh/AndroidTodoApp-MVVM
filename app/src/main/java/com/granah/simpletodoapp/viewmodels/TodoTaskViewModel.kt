@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.granah.simpletodoapp.database.TaskDao
@@ -13,12 +14,13 @@ import java.lang.Exception
 
 class TodoTaskViewModel(private val dataSource: TaskDao, application: Application) : AndroidViewModel(application){
 
-   private val database = dataSource
+    private val database = dataSource
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-      var tasks = database.getTasks(false)
+     val tasks: LiveData<List<Task>> = database.getTasks(false)
+
 
     fun onInsert(name:String){
         uiScope.launch {

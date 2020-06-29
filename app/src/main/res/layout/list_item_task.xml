@@ -9,7 +9,7 @@
 
         <variable
             name="clicklistener"
-            type="com.granah.simpletodoapp.adapters.TaskListener" />
+            type="com.granah.simpletodoapp.adapters.TaskAdapterListeners" />
 
         <variable
             name="position"
@@ -68,7 +68,7 @@
                 android:layout_marginBottom="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:onClick="@{() -> clicklistener.onClick(task,position)}"
+                android:onClick="@{() -> clicklistener.onClickCheckBox(task,position.adapterPosition)}"
                 app:layout_constraintBottom_toTopOf="@+id/tvDateTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
