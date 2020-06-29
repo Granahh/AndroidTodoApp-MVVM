@@ -10,4 +10,10 @@ A simple Todo App with MVVM
 - To remove a task, swipe to the left
 - To Add a task, press the button
 
+# Libraries
 
+- Material Design
+- Coroutines Kotlin
+- Room and LifeCycle
+- Navigation
+- *DataBinding Enabled
